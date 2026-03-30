@@ -25,7 +25,7 @@ class billClass:
         self.var_cal_input = StringVar()
         #  add cart widgets frame
         self.var_pid = StringVar()
-        self.var_pname = StringVar()
+        self.var_name = StringVar()
         self.var_price = StringVar()
         self.var_qty = StringVar()
         self.var_stock = StringVar()
@@ -161,7 +161,7 @@ class billClass:
         Add_CartWidgets_Frame.place(x=420,y=550,width=530,height=110)
 
         lbl_p_name=Label(Add_CartWidgets_Frame,text="Product Name",font=("times new roman",15),bg="white").place(x=5,y=5)
-        txt_p_name=Entry(Add_CartWidgets_Frame,textvariable=self.var_pname,font=("times new roman",15),bg="lightyellow",state='readonly').place(x=5,y=35,width=190,height=22)
+        txt_p_name=Entry(Add_CartWidgets_Frame,textvariable=self.var_name,font=("times new roman",15),bg="lightyellow",state='readonly').place(x=5,y=35,width=190,height=22)
 
         lbl_p_price=Label(Add_CartWidgets_Frame,text="Price Per Qty",font=("times new roman",15),bg="white").place(x=230,y=5)
         txt_p_price=Entry(Add_CartWidgets_Frame,textvariable=self.var_price,font=("times new roman",15),bg="lightyellow",state='readonly').place(x=230,y=35,width=150,height=22)
@@ -191,8 +191,8 @@ class billClass:
         billMenuFrame=Frame(self.root,bd=2,relief=RIDGE,bg="white")
         billMenuFrame.place(x=953,y=520,width=400,height=140)
 
-        self.lbl_amnt=Label(billMenuFrame,text="Bill Amount\n[0]",font=("goudy old style",15,"bold"),bg="#3f51b5",fg="white")
-        self.lbl_amnt.place(x=2,y=5,width=120,height=70)
+        self.lbl_amount=Label(billMenuFrame,text="Bill Amount\n[0]",font=("goudy old style",15,"bold"),bg="#3f51b5",fg="white")
+        self.lbl_amount.place(x=2,y=5,width=120,height=70)
 
         self.lbl_discount=Label(billMenuFrame,text="Discount\n[5%]",font=("goudy old style",15,"bold"),bg="#8bc34a",fg="white")
         self.lbl_discount.place(x=124,y=5,width=120,height=70)
@@ -259,7 +259,7 @@ class billClass:
         content=(self.product_Table.item(f))
         row=content['values']
         self.var_pid.set(row[0])
-        self.var_pname.set(row[1])
+        self.var_name.set(row[1])
         self.var_price.set(row[2])
         self.lbl_inStock.config(text=f"In Stock [{str(row[3])}]")
         self.var_stock.set(row[3])
@@ -270,7 +270,7 @@ class billClass:
         content=(self.CartTable.item(f))
         row=content['values']
         self.var_pid.set(row[0])
-        self.var_pname.set(row[1])
+        self.var_name.set(row[1])
         self.var_price.set(row[2])
         self.var_qty.set(row[3])
         self.lbl_inStock.config(text=f"In Stock [{str(row[4])}]")
@@ -287,7 +287,7 @@ class billClass:
             #price_cal=int(self.var_qty.get())*float(self.var_price.get())
             #price_cal=float(price_cal)
             price_cal=self.var_price.get()
-            cart_data=[self.var_pid.get(),self.var_pname.get(),price_cal,self.var_qty.get(),self.var_stock.get()]
+            cart_data=[self.var_pid.get(),self.var_name.get(),price_cal,self.var_qty.get(),self.var_stock.get()]
             #---------- update cart --------------
             present="no"
             index_=0
@@ -310,14 +310,14 @@ class billClass:
             self.bill_update()
 
     def bill_update(self):
-        self.bill_amnt=0
+        self.bill_amount=0
         self.net_pay=0
         self.discount=0
         for row in self.cart_list:
-            self.bill_amnt=self.bill_amnt+(float(row[2])*int(row[3]))
-        self.discount=(self.bill_amnt*5)/100
-        self.net_pay=self.bill_amnt-self.discount
-        self.lbl_amnt.config(text=f"Bill Amnt\n{str(self.bill_amnt)}")
+            self.bill_amount=self.bill_amount+(float(row[2])*int(row[3]))
+        self.discount=(self.bill_amount*5)/100
+        self.net_pay=self.bill_amount-self.discount
+        self.lbl_amount.config(text=f"Bill amount\n{str(self.bill_amount)}")
         self.lbl_net_pay.config(text=f"Net Pay\n{str(self.net_pay)}")
         self.cartTitle.config(text=f"Cart \t Total Products: [{str(len(self.cart_list))}]")
 
@@ -367,7 +367,7 @@ class billClass:
     def bill_bottom(self):
         bill_bottom_temp=f'''
 {str("="*46)}
- Bill Amount\t\t\t\tRs.{self.bill_amnt}
+ Bill Amount\t\t\t\tRs.{self.bill_amount}
  Discount\t\t\t\tRs.{self.discount}
  Net Pay\t\t\t\tRs.{self.net_pay}
 {str("="*46)}\n
@@ -403,7 +403,7 @@ class billClass:
 
     def clear_cart(self):
         self.var_pid.set("")
-        self.var_pname.set("")
+        self.var_name.set("")
         self.var_price.set("")
         self.var_qty.set("")
         self.lbl_inStock.config(text=f"In Stock")

@@ -43,7 +43,7 @@ def test_generate_and_search_bill(tmp_path, monkeypatch):
     sales_obj = salesClass.__new__(salesClass)
     sales_obj.root = root
     sales_obj.var_invoice = tk.StringVar(root, value="1001")
-    sales_obj.blll_list = ['1001']
+    sales_obj.bill_list = ['1001']
     sales_obj.bill_area = tk.Text(root)
 
     salesClass.search(sales_obj)

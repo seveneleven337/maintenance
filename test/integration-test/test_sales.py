@@ -42,7 +42,7 @@ def test_sales_search_valid(tmp_path, monkeypatch):
     sales_obj = salesClass.__new__(salesClass)
     sales_obj.root = root
     sales_obj.var_invoice = tk.StringVar(root, value="1001")
-    sales_obj.blll_list = ['1001']
+    sales_obj.bill_list = ['1001']
     sales_obj.bill_area = tk.Text(root)
 
     salesClass.search(sales_obj)
@@ -92,7 +92,7 @@ def test_sales_search_invalid(tmp_path, monkeypatch):
     sales_obj = salesClass.__new__(salesClass)
     sales_obj.root = root
     sales_obj.var_invoice = tk.StringVar(root, value="999")
-    sales_obj.blll_list = ['1001']
+    sales_obj.bill_list = ['1001']
     sales_obj.bill_area = tk.Text(root)
 
     with mock.patch('sales.messagebox.showerror') as mock_error:
