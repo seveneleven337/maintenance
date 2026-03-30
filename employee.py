@@ -2,11 +2,13 @@ import os
 from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
-import sqlite3
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
+
+from utils.database_connection import _connect_db
+
 
 class employeeClass:
     def __init__(self,root):
@@ -142,7 +144,7 @@ class employeeClass:
             self._show_error("This Employee ID is already assigned")
             return
 
-        con, cur = self._connect_db()
+        con, cur = _connect_db()
         try:
             cur.execute(
                 "insert into employee(eid,name,email,gender,contact,dob,doj,pass,utype,address,salary) values(?,?,?,?,?,?,?,?,?,?,?)",
@@ -168,7 +170,7 @@ class employeeClass:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
 
     def show(self):
-        con, cur = self._connect_db()
+        con, cur = _connect_db()
         try:
             cur.execute("select * from employee")
             rows = cur.fetchall()
@@ -196,7 +198,7 @@ class employeeClass:
             self._show_error("Invalid Employee ID")
             return
 
-        con, cur = self._connect_db()
+        con, cur = _connect_db()
         try:
             cur.execute(
                 "update employee set name=?,email=?,gender=?,contact=?,dob=?,doj=?,pass=?,utype=?,address=?,salary=? where eid= ?",
@@ -221,7 +223,7 @@ class employeeClass:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
 
     def delete(self):
-        cur = self._connect_db()
+        con, cur = _connect_db()
         try:
             if self.var_emp_id.get()=="":
                 messagebox.showerror("Error","Employee ID must be required",parent=self.root)
@@ -239,6 +241,8 @@ class employeeClass:
                         self.clear()
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def clear(self):
         self.var_emp_id.set("")
@@ -256,10 +260,6 @@ class employeeClass:
         self.var_searchtxt.set("")
         self.show()
 
-    def _connect_db(self):
-        con = sqlite3.connect(database=r'ims.db')
-        return con, con.cursor()
-
     def _show_error(self, message):
         messagebox.showerror("Error", message, parent=self.root)
 
@@ -267,7 +267,7 @@ class employeeClass:
         messagebox.showinfo("Success", message, parent=self.root)
 
     def _fetch_employee(self, emp_id):
-        con, cur = self._connect_db()
+        con, cur = _connect_db()
         cur.execute("select * from employee where eid=?", (emp_id,))
         row = cur.fetchone()
         con.close()
@@ -345,7 +345,7 @@ class employeeClass:
 
 
     def search(self):
-        cur = self._connect_db()
+        con, cur = _connect_db()
         try:
             if self.var_searchby.get()=="Select":
                 messagebox.showerror("Error","Select Search By option",parent=self.root)
@@ -362,6 +362,8 @@ class employeeClass:
                     messagebox.showerror("Error","No record found!!!",parent=self.root)
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
 
 if __name__=="__main__":
