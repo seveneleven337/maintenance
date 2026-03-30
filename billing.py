@@ -6,6 +6,8 @@ import time
 import os
 import tempfile
 
+from utils.database_connection import _connect_db
+
 class billClass:
     def __init__(self,root):
         self.root=root
@@ -212,7 +214,7 @@ class billClass:
         self.show()
         #self.bill_top()
         self.update_date_time()
-#---------------------- all functions ------------------------------
+#-----------------------------------------------------------------------------------------------------
     def get_input(self,num):
         xnum=self.var_cal_input.get()+str(num)
         self.var_cal_input.set(xnum)
@@ -225,8 +227,7 @@ class billClass:
         self.var_cal_input.set(eval(result))
 
     def show(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             cur.execute("select pid,name,price,qty,status from product where status='Active'")
             rows=cur.fetchall()
@@ -235,24 +236,27 @@ class billClass:
                 self.product_Table.insert('',END,values=row)
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def search(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        if self.var_search.get()=="":
+            messagebox.showerror("Error","Search input should be required",parent=self.root)
+            return
+        con, cur = _connect_db()
         try:
-            if self.var_search.get()=="":
-                messagebox.showerror("Error","Search input should be required",parent=self.root)
+            cur.execute("select pid,name,price,qty,status from product where name LIKE '%"+self.var_search.get()+"%'")
+            rows=cur.fetchall()
+            if len(rows)!=0:
+                self.product_Table.delete(*self.product_Table.get_children())
+                for row in rows:
+                    self.product_Table.insert('',END,values=row)
             else:
-                cur.execute("select pid,name,price,qty,status from product where name LIKE '%"+self.var_search.get()+"%'")
-                rows=cur.fetchall()
-                if len(rows)!=0:
-                    self.product_Table.delete(*self.product_Table.get_children())
-                    for row in rows:
-                        self.product_Table.insert('',END,values=row)
-                else:
-                    messagebox.showerror("Error","No record found!!!",parent=self.root)
+                messagebox.showerror("Error","No record found!!!",parent=self.root)
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def get_data(self,ev):
         f=self.product_Table.focus()
@@ -375,8 +379,7 @@ class billClass:
         self.txt_bill_area.insert(END,bill_bottom_temp)
 
     def bill_middle(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             for row in self.cart_list:
                 pid=row[0]
@@ -396,10 +399,11 @@ class billClass:
                     pid
                 ))
                 con.commit()
-            con.close()
             self.show()
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}",parent=self.root)
+        finally:
+            con.close()
 
     def clear_cart(self):
         self.var_pid.set("")

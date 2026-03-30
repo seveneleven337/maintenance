@@ -2,6 +2,13 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk,messagebox
 import sqlite3
+import os
+
+# ------------------ BASE PATH SETUP ------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_DIR = os.path.join(BASE_DIR, "images")
+
+from utils.database_connection import _connect_db
 
 class productClass:
     def __init__(self,root):
@@ -19,7 +26,7 @@ class productClass:
         self.var_pid=StringVar()
         self.var_sup=StringVar()
         self.var_name=StringVar()
-        self.var_price=StringVar()
+        self.var_price=DoubleVar()
         self.var_qty=StringVar()
         self.var_status=StringVar()
         self.var_searchby=StringVar()
@@ -108,8 +115,7 @@ class productClass:
     def fetch_cat_sup(self):
         self.cat_list.append("Empty")
         self.sup_list.append("Empty")
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             cur.execute("select name from category")
             cat=cur.fetchall()
@@ -127,12 +133,13 @@ class productClass:
                     self.sup_list.append(i[0])
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     
     
     def add(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             if self.var_cat.get()=="Select" or self.var_cat.get()=="Empty" or self.var_sup=="Select" or self.var_sup=="Empty":
                 messagebox.showerror("Error","All fields are required",parent=self.root)
@@ -156,10 +163,11 @@ class productClass:
                     self.show()
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def show(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             cur.execute("select * from product")
             rows=cur.fetchall()
@@ -168,6 +176,8 @@ class productClass:
                 self.ProductTable.insert('',END,values=row)
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def get_data(self,ev):
         f=self.ProductTable.focus()
@@ -182,8 +192,7 @@ class productClass:
         self.var_status.set(row[6])
 
     def update(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             if self.var_pid.get()=="":
                 messagebox.showerror("Error","Please select product from list",parent=self.root)
@@ -207,10 +216,11 @@ class productClass:
                     self.show()
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def delete(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             if self.var_pid.get()=="":
                 messagebox.showerror("Error","Select Product from the list",parent=self.root)
@@ -228,12 +238,14 @@ class productClass:
                         self.clear()
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
     def clear(self):
         self.var_cat.set("Select")
         self.var_sup.set("Select")
         self.var_name.set("")
-        self.var_price.set("")
+        self.var_price.set(0.0)
         self.var_qty.set("")
         self.var_status.set("Active")
         self.var_pid.set("")
@@ -243,8 +255,7 @@ class productClass:
 
     
     def search(self):
-        con=sqlite3.connect(database=r'ims.db')
-        cur=con.cursor()
+        con, cur = _connect_db()
         try:
             if self.var_searchby.get()=="Select":
                 messagebox.showerror("Error","Select Search By option",parent=self.root)
@@ -261,6 +272,8 @@ class productClass:
                     messagebox.showerror("Error","No record found!!!",parent=self.root)
         except Exception as ex:
             messagebox.showerror("Error",f"Error due to : {str(ex)}")
+        finally:
+            con.close()
 
 if __name__=="__main__":
     root=Tk()

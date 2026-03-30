@@ -4,6 +4,7 @@ from tkinter import messagebox
 import time
 import sqlite3
 import os
+from utils.database_connection import _connect_db
 
 from employee import employeeClass
 from supplier import supplierClass
@@ -192,9 +193,7 @@ class IMS:
         self.new_obj = salesClass(self.new_win)
 
     def update_content(self):
-        con = sqlite3.connect(database=os.path.join(BASE_DIR, 'ims.db'))
-        cur = con.cursor()
-
+        con, cur = _connect_db()
         try:
             cur.execute("select * from product")
             product = cur.fetchall()
@@ -225,6 +224,8 @@ class IMS:
 
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : {str(ex)}", parent=self.root)
+        finally:
+            con.close()
 
 
 if __name__ == "__main__":
