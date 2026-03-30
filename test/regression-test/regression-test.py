@@ -1,12 +1,11 @@
 import os
 import sys
 import tkinter as tk
-import unittest.mock as mock
-from billing import billClass
-from sales import salesClass
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
+from billing import billClass
+from sales import salesClass
 
 def test_generate_and_search_bill(tmp_path, monkeypatch):
     root = tk.Tk()
