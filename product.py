@@ -11,7 +11,7 @@ class productClass:
         self.root.resizable(False,False)
         self.root.focus_force()
         #---------------------------------------
-        #----------- variables -------------
+        #------------ all variables --------------
         self.var_cat=StringVar()
         self.cat_list=[]
         self.sup_list=[]

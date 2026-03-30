@@ -20,6 +20,7 @@ class salesClass:
         self.root.resizable(False, False)
         self.root.focus_force()
 
+        #------------ all variables --------------
         self.blll_list = []
         self.var_invoice = StringVar()
 

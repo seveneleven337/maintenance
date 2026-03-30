@@ -15,6 +15,21 @@ class billClass:
         self.cart_list=[]
         self.chk_print=0
 
+        # ------------- all variables --------------
+        # Product Frame
+        self.var_search = StringVar()
+        # customer frame
+        self.var_cname = StringVar()
+        self.var_contact = StringVar()
+        #  calculator frame
+        self.var_cal_input = StringVar()
+        #  add cart widgets frame
+        self.var_pid = StringVar()
+        self.var_pname = StringVar()
+        self.var_price = StringVar()
+        self.var_qty = StringVar()
+        self.var_stock = StringVar()
+
         #------------- title --------------
         self.icon_title=PhotoImage(file="images/logo1.png")
         title=Label(self.root,text="Inventory Management System",image=self.icon_title,compound=LEFT,font=("times new roman",40,"bold"),bg="#010c48",fg="white",anchor="w",padx=20).place(x=0,y=0,relwidth=1,height=70)
@@ -31,8 +46,6 @@ class billClass:
         ProductFrame1.place(x=6,y=110,width=410,height=550)
 
         pTitle=Label(ProductFrame1,text="All Products",font=("goudy old style",20,"bold"),bg="#262626",fg="white").pack(side=TOP,fill=X)
-        
-        self.var_search=StringVar()
 
         ProductFrame2=Frame(ProductFrame1,bd=2,relief=RIDGE,bg="white")
         ProductFrame2.place(x=2,y=42,width=398,height=90)
@@ -73,8 +86,6 @@ class billClass:
         lbl_note=Label(ProductFrame1,text="Note: 'Enter 0 Quantity to remove product from the Cart'",font=("goudy old style",12),anchor="w",bg="white",fg="red").pack(side=BOTTOM,fill=X)
 
         #-------------- customer frame ---------------
-        self.var_cname=StringVar()
-        self.var_contact=StringVar()
 
         CustomerFrame=Frame(self.root,bd=4,relief=RIDGE,bg="white")
         CustomerFrame.place(x=420,y=110,width=530,height=70)
@@ -91,7 +102,6 @@ class billClass:
         Cal_Cart_Frame.place(x=420,y=190,width=530,height=360)
 
         #--------------- calculator frame ---------------------
-        self.var_cal_input=StringVar()
 
         Cal_Frame=Frame(Cal_Cart_Frame,bd=9,relief=RIDGE,bg="white")
         Cal_Frame.place(x=5,y=10,width=268,height=340)
@@ -146,11 +156,6 @@ class billClass:
         self.CartTable.bind("<ButtonRelease-1>",self.get_data_cart)
 
         #-------------- add cart widgets frame ---------------
-        self.var_pid=StringVar()
-        self.var_pname=StringVar()
-        self.var_price=StringVar()
-        self.var_qty=StringVar()
-        self.var_stock=StringVar()
 
         Add_CartWidgets_Frame=Frame(self.root,bd=2,relief=RIDGE,bg="white")
         Add_CartWidgets_Frame.place(x=420,y=550,width=530,height=110)
@@ -307,7 +312,7 @@ class billClass:
     def bill_update(self):
         self.bill_amnt=0
         self.net_pay=0
-        self.siscount=0
+        self.discount=0
         for row in self.cart_list:
             self.bill_amnt=self.bill_amnt+(float(row[2])*int(row[3]))
         self.discount=(self.bill_amnt*5)/100

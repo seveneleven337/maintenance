@@ -11,7 +11,7 @@ class categoryClass:
         self.root.resizable(False,False)
         self.root.focus_force()
 
-        #------------ variables -------------
+        #------------ all variables --------------
         self.var_cat_id=StringVar()
         self.var_name=StringVar()
         #--------------- title ---------------------
